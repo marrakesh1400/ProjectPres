@@ -1,0 +1,63 @@
+---
+title       : Easy UTM Coordinate Conversion  
+subtitle    : A web-based coordinate converter based in R
+author      : Marrakesh1400
+job         : 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Why the Easy UTM Coordinate Converter?
+
+
+1. Because you want to know where you are and where you're going!
+2. Topographic maps very often use only UTM coordinates.
+3. UTM coordinates (and similar projections) are much more efficient and intuitive for determining distances and areas.
+
+---
+
+## What is UTM?
+
+#### UTM is the Universal Transverse Mercator projection, which converts latitude and longitude coordinates to "eastings" and "northings". Unlike latitude/longitude, which are in degree units, UTM is in meters, making it easier to calculate distances and areas. In the UTM system, the world is divided into 60 slices, starting at the International Date Line and going across the globe. All locations are "eastings" and "northings", or the distances from the lower left corner of the slice. The corner is on the Equator, however, so if you're in the southern hemisphere, northings are negative.
+
+
+---
+
+#### The application uses the powerful package RGDAL, which is the R version of the Geospatial Data Abstraction Library. Below is an example of how to convert longitude and latitude to UTM. Note: UTM zone is determined in a separate function.
+
+
+```r
+library(rgdal)
+# function to convert long/latitude to UTM coordinates
+LongLatToUTM<-function(x,y,zone){
+  xy <- data.frame(ID = 1:length(x), X = x, Y = y)
+  coordinates(xy) <- c("X", "Y")
+  proj4string(xy) <- CRS("+proj=longlat +datum=WGS84")  ## for example
+  res <- spTransform(xy, CRS(paste("+proj=utm +zone=",zone," ellps=WGS84",sep='')))
+  resdf = (as.data.frame(res))
+  return(resdf)
+}
+LongLatToUTM(-74.0,-20.1, 18)
+```
+
+```
+##   ID        X        Y
+## 1  1 604543.1 -2222861
+```
+
+--- 
+
+## So check out the Easy UTM Coordinate Converter in your Web Browser:
+
+### https://marrakesh1400.shinyapps.io/project
+
+## And check out the code on GitHub:
+
+### https://github.com/marrakesh1400/DevelopDataProducts
+
+
+

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Easy UTM Coordinate Conversion</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Easy UTM Coordinate Conversion">
+  <meta name="author" content="Marrakesh1400">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Easy UTM Coordinate Conversion</h1>
+    <h2>A web-based coordinate converter based in R</h2>
+    <p>Marrakesh1400<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Why the Easy UTM Coordinate Converter?</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>Because you want to know where you are and where you&#39;re going!</li>
+<li>Topographic maps very often use only UTM coordinates.</li>
+<li>UTM coordinates (and similar projections) are much more efficient and intuitive for determining distances and areas.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>What is UTM?</h2>
+  </hgroup>
+  <article data-timings="">
+    <h4>UTM is the Universal Transverse Mercator projection, which converts latitude and longitude coordinates to &quot;eastings&quot; and &quot;northings&quot;. Unlike latitude/longitude, which are in degree units, UTM is in meters, making it easier to calculate distances and areas. In the UTM system, the world is divided into 60 slices, starting at the International Date Line and going across the globe. All locations are &quot;eastings&quot; and &quot;northings&quot;, or the distances from the lower left corner of the slice. The corner is on the Equator, however, so if you&#39;re in the southern hemisphere, northings are negative.</h4>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h4>The application uses the powerful package RGDAL, which is the R version of the Geospatial Data Abstraction Library. Below is an example of how to convert longitude and latitude to UTM. Note: UTM zone is determined in a separate function.</h4>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(rgdal)
+# function to convert long/latitude to UTM coordinates
+LongLatToUTM&lt;-function(x,y,zone){
+  xy &lt;- data.frame(ID = 1:length(x), X = x, Y = y)
+  coordinates(xy) &lt;- c(&quot;X&quot;, &quot;Y&quot;)
+  proj4string(xy) &lt;- CRS(&quot;+proj=longlat +datum=WGS84&quot;)  ## for example
+  res &lt;- spTransform(xy, CRS(paste(&quot;+proj=utm +zone=&quot;,zone,&quot; ellps=WGS84&quot;,sep=&#39;&#39;)))
+  resdf = (as.data.frame(res))
+  return(resdf)
+}
+LongLatToUTM(-74.0,-20.1, 18)
+</code></pre>
+
+<pre><code>##   ID        X        Y
+## 1  1 604543.1 -2222861
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>So check out the Easy UTM Coordinate Converter in your Web Browser:</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3><a href="https://marrakesh1400.shinyapps.io/project">https://marrakesh1400.shinyapps.io/project</a></h3>
+
+<h2>And check out the code on GitHub:</h2>
+
+<h3><a href="https://github.com/marrakesh1400/DevelopDataProducts">https://github.com/marrakesh1400/DevelopDataProducts</a></h3>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Why the Easy UTM Coordinate Converter?'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='What is UTM?'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='The application uses the powerful package RGDAL, which is the R version of the Geospatial Data Abstraction Library. Below is an example of how to convert longitude and latitude to UTM. Note: UTM zone is determined in a separate function.'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='So check out the Easy UTM Coordinate Converter in your Web Browser:'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
